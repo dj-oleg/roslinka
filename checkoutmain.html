@@ -1748,6 +1748,13 @@ position: absolute;
 
 
 
+<!-- нов вставка для заказа-->
+<!-- Скрытые поля для способа доставки -->
+<input type="hidden" name="shipping_method" id="shipping_method" value="">
+<input type="hidden" name="delivery_address" id="delivery_address" value="">
+<input type="hidden" name="delivery_postcode" id="delivery_postcode" value="">
+<input type="hidden" name="delivery_city" id="delivery_city" value="">
+
 
 
 <!-- ins nova post -->
@@ -1756,6 +1763,27 @@ position: absolute;
 
 
 
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="first_name" value="{{ user.first_name }}" required>
+    <input type="text" name="last_name" value="{{ user.last_name }}" required>
+    <input type="email" name="email" value="{{ user.email }}" required>
+    <input type="tel" name="phone" value="{{ user.phone }}" required>
+
+    <!-- Выбор способа доставки -->
+    <div>
+        <label><input type="radio" name="shipping_method" value="nova_poshta" required> Нова пошта</label>
+        <label><input type="radio" name="shipping_method" value="ukrposhta"> Укрпошта</label>
+    </div>
+
+    <!-- Адрес доставки -->
+    <input type="text" name="address" placeholder="Адрес доставки" required>
+    <input type="text" name="city" placeholder="Город" required>
+    <input type="text" name="state" placeholder="Область (опционально)">
+    <input type="text" name="postal_code" placeholder="Почтовый код (опционально)">
+
+    <button type="submit">Оформить заказ</button>
+</form>
 
 
 
@@ -2562,82 +2590,6 @@ var $ = jQuery.noConflict();
 
 <script>
 
-	
-// document.addEventListener("DOMContentLoaded", function () {
-//     const novaPoshtaRadio = document.getElementById("shipping_method_0_nova_poshta_shipping12");
-//     const ukrPoshtaRadio = document.getElementById("shipping_method_0_flat_rate16");
-//     const novaPoshtaFields = document.getElementById("wcus_np_shipping_fields");
-//     const additionalFields = [
-//         document.getElementById("shipping_address_1_field"),
-//         document.getElementById("shipping_city_field"),
-//         document.getElementById("shipping_state_field"),
-//     ];
-
-//     if (!novaPoshtaRadio || !ukrPoshtaRadio || !novaPoshtaFields) {
-//         console.error("One or more elements are missing:", {
-//             novaPoshtaRadio,
-//             ukrPoshtaRadio,
-//             novaPoshtaFields
-//         });
-//         return;
-//     }
-
-
-// 	function toggleFields() {
-//     if (novaPoshtaRadio.checked) {
-//         novaPoshtaFields.classList.remove("hidden");
-//         additionalFields.forEach(field => {
-//             if (field) field.classList.add("hidden");
-//         });
-//     } else if (ukrPoshtaRadio.checked) {
-//         novaPoshtaFields.classList.add("hidden");
-//         additionalFields.forEach(field => {
-//             if (field) field.classList.remove("hidden");
-//         });
-//     }
-// }
-
-
-//     novaPoshtaRadio.addEventListener("change", toggleFields);
-//     ukrPoshtaRadio.addEventListener("change", toggleFields);
-//     toggleFields(); // Инициализация
-// });
-
-
-
-// const observer = new MutationObserver(() => {
-//     console.log("DOM changed");
-//     toggleFields(); // Обновить видимость полей
-// });
-
-// observer.observe(document.body, { childList: true, subtree: true });
-
-// good code
-// document.addEventListener("DOMContentLoaded", function () {
-//     // Получаем элементы радиокнопок
-//     const novaPoshtaRadio = document.getElementById("shipping_method_0_nova_poshta_shipping12");
-//     const ukrPoshtaRadio = document.getElementById("shipping_method_0_flat_rate16");
-
-//     // Получаем блок, который нужно показывать или скрывать
-//     const billingFields = document.getElementById("wcus_np_billing_fields");
-
-//     // Функция для обновления видимости блока
-//     function updateBillingFieldsVisibility() {
-//         if (novaPoshtaRadio.checked) {
-//             billingFields.style.display = "block"; // Показываем блок
-//         } else if (ukrPoshtaRadio.checked) {
-//             billingFields.style.display = "none"; // Скрываем блок
-//         }
-//     }
-
-//     // Привязываем обработчики событий к радиокнопкам
-//     novaPoshtaRadio.addEventListener("change", updateBillingFieldsVisibility);
-//     ukrPoshtaRadio.addEventListener("change", updateBillingFieldsVisibility);
-
-//     // Устанавливаем начальное состояние блока при загрузке страницы
-//     updateBillingFieldsVisibility();
-// });
-
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -2682,6 +2634,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	</script>
 	
+
+
+
+
+<script>
+document.querySelectorAll('input[name="shipping_method[0]"]').forEach(input => {
+    input.addEventListener('change', function() {
+        if (this.id === 'shipping_method_0_nova_poshta_shipping12') {
+            // Нова пошта
+            document.getElementById('shipping_method').value = 'nova_poshta';
+            document.getElementById('delivery_address').value = 'Адрес для Нова пошта'; // Пример
+            document.getElementById('delivery_postcode').value = 'Код Нова пошта'; // Пример
+            document.getElementById('delivery_city').value = 'Город Нова пошта'; // Пример
+        } else if (this.id === 'shipping_method_0_flat_rate16') {
+            // Укрпошта
+            document.getElementById('shipping_method').value = 'ukrposhta';
+            document.getElementById('delivery_address').value = 'Адрес для Укрпошта'; // Пример
+            document.getElementById('delivery_postcode').value = 'Код Укрпошта'; // Пример
+            document.getElementById('delivery_city').value = 'Город Укрпошта'; // Пример
+        }
+    });
+});
+
+
+
+</script>
+
 
 
 </body></html>
